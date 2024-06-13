@@ -11,45 +11,52 @@ class EnglishCourseFSA:
     def start_registration(self):
         if self.state == 'start':
             st.title("English Course Registration")
-            st.session_state.state = 'waiting_for_name'
-            st.experimental_rerun()
+            if st.button('Start Registration', key='start_button'):
+                st.session_state.state = 'waiting_for_name'
+                st.experimental_rerun()
         else:
-            st.error("Invalid operation. Already in progress or completed.")
-    
+            st.error("Invalid operation. Registration already in progress or completed.")
+
     def get_name(self):
         if self.state == 'waiting_for_name':
-            self.name = st.text_input("Please enter your name:", key='name')
+            self.name = st.text_input("Please enter your name:", key='name_input')
             if st.button('Next', key='name_next'):
                 if self.name:
                     st.session_state.name = self.name
                     st.session_state.state = 'waiting_for_email'
                     st.experimental_rerun()
+                else:
+                    st.warning("Name cannot be empty.")
         else:
             st.error("Invalid operation. Name is already provided or in incorrect state.")
 
     def get_email(self):
         if self.state == 'waiting_for_email':
-            self.email = st.text_input("Please enter your email:", key='email')
+            self.email = st.text_input("Please enter your email:", key='email_input')
             if st.button('Next', key='email_next'):
                 if self.email:
                     st.session_state.email = self.email
                     st.session_state.state = 'waiting_for_program'
                     st.experimental_rerun()
+                else:
+                    st.warning("Email cannot be empty.")
         else:
             st.error("Invalid operation. Email is already provided or in incorrect state.")
-    
+
     def choose_program(self):
         if self.state == 'waiting_for_program':
             st.subheader("Choose a Program")
-            self.program = st.radio("Select Program:", options=['Grammar', 'Writing'], key='program')
+            self.program = st.radio("Select Program:", options=['Grammar', 'Writing'], key='program_radio')
             if st.button('Next', key='program_next'):
                 if self.program:
                     st.session_state.program = self.program
                     st.session_state.state = 'program_chosen'
                     st.experimental_rerun()
+                else:
+                    st.warning("Please select a program.")
         else:
             st.error("Invalid operation. Program is already chosen or in incorrect state.")
-    
+
     def start_program(self):
         if self.state == 'program_chosen':
             st.write(f"Starting the {self.program} program!")
@@ -57,7 +64,7 @@ class EnglishCourseFSA:
             st.experimental_rerun()
         else:
             st.error("Invalid operation. Program is not chosen yet or in incorrect state.")
-    
+
     def take_quiz(self):
         if self.state == 'taking_quiz':
             questions = {
@@ -81,16 +88,16 @@ class EnglishCourseFSA:
             self.score = 0
             for i, q in enumerate(selected_questions):
                 st.write(q["question"])
-                answer = st.radio("Your answer:", options=["a", "b"], key=f'quiz_{i}')
+                answer = st.radio("Your answer:", options=["a", "b"], key=f'quiz_{self.program}_{i}')
                 if answer == q["answer"]:
                     self.score += 1
-            if st.button('Submit Quiz'):
+            if st.button('Submit Quiz', key='submit_quiz'):
                 st.session_state.score = self.score
                 st.session_state.state = 'quiz_completed'
                 st.experimental_rerun()
         else:
             st.error("Invalid operation. Quiz is already completed or in incorrect state.")
-    
+
     def complete_registration(self):
         if self.state == 'quiz_completed':
             st.write(f"Thank you {self.name}!")
