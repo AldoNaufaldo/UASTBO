@@ -20,22 +20,24 @@ class EnglishCourseFSA:
     def get_name(self):
         if self.state == 'waiting_for_name':
             self.name = st.text_input("Please enter your name:", key='name')
-            if self.name:
-                self.state = 'waiting_for_email'
-                st.session_state.state = self.state
-                st.session_state.name = self.name
-                self.get_email()
+            if st.button('Next', key='name_next'):
+                if self.name:
+                    self.state = 'waiting_for_email'
+                    st.session_state.state = self.state
+                    st.session_state.name = self.name
+                    st.experimental_rerun()
         else:
             st.error("Invalid operation. Name is already provided or in incorrect state.")
 
     def get_email(self):
         if self.state == 'waiting_for_email':
             self.email = st.text_input("Please enter your email:", key='email')
-            if self.email:
-                self.state = 'waiting_for_program'
-                st.session_state.state = self.state
-                st.session_state.email = self.email
-                self.choose_program()
+            if st.button('Next', key='email_next'):
+                if self.email:
+                    self.state = 'waiting_for_program'
+                    st.session_state.state = self.state
+                    st.session_state.email = self.email
+                    st.experimental_rerun()
         else:
             st.error("Invalid operation. Email is already provided or in incorrect state.")
     
@@ -43,11 +45,12 @@ class EnglishCourseFSA:
         if self.state == 'waiting_for_program':
             st.subheader("Choose a Program")
             self.program = st.radio("Select Program:", options=['Grammar', 'Writing'], key='program')
-            if self.program:
-                self.state = 'program_chosen'
-                st.session_state.state = self.state
-                st.session_state.program = self.program
-                self.start_program()
+            if st.button('Next', key='program_next'):
+                if self.program:
+                    self.state = 'program_chosen'
+                    st.session_state.state = self.state
+                    st.session_state.program = self.program
+                    st.experimental_rerun()
         else:
             st.error("Invalid operation. Program is already chosen or in incorrect state.")
     
@@ -81,10 +84,11 @@ class EnglishCourseFSA:
                 answer = st.radio("Your answer:", options=["a", "b"], key=f'quiz_{i}')
                 if answer == q["answer"]:
                     self.score += 1
-            self.state = 'quiz_completed'
-            st.session_state.state = self.state
-            st.session_state.score = self.score
-            self.complete_registration()
+            if st.button('Submit Quiz'):
+                self.state = 'quiz_completed'
+                st.session_state.state = self.state
+                st.session_state.score = self.score
+                st.experimental_rerun()
         else:
             st.error("Invalid operation. Quiz is already completed or in incorrect state.")
     
