@@ -11,8 +11,7 @@ class EnglishCourseFSA:
     def start_registration(self):
         if self.state == 'start':
             st.title("English Course Registration")
-            self.state = 'waiting_for_name'
-            st.session_state.state = self.state
+            st.session_state.state = 'waiting_for_name'
             self.get_name()
         else:
             st.error("Invalid operation. Already in progress or completed.")
@@ -22,8 +21,7 @@ class EnglishCourseFSA:
             self.name = st.text_input("Please enter your name:", key='name')
             if st.button('Next', key='name_next'):
                 if self.name:
-                    self.state = 'waiting_for_email'
-                    st.session_state.state = self.state
+                    st.session_state.state = 'waiting_for_email'
                     st.session_state.name = self.name
                     st.experimental_rerun()
         else:
@@ -34,8 +32,7 @@ class EnglishCourseFSA:
             self.email = st.text_input("Please enter your email:", key='email')
             if st.button('Next', key='email_next'):
                 if self.email:
-                    self.state = 'waiting_for_program'
-                    st.session_state.state = self.state
+                    st.session_state.state = 'waiting_for_program'
                     st.session_state.email = self.email
                     st.experimental_rerun()
         else:
@@ -47,8 +44,7 @@ class EnglishCourseFSA:
             self.program = st.radio("Select Program:", options=['Grammar', 'Writing'], key='program')
             if st.button('Next', key='program_next'):
                 if self.program:
-                    self.state = 'program_chosen'
-                    st.session_state.state = self.state
+                    st.session_state.state = 'program_chosen'
                     st.session_state.program = self.program
                     st.experimental_rerun()
         else:
@@ -57,8 +53,7 @@ class EnglishCourseFSA:
     def start_program(self):
         if self.state == 'program_chosen':
             st.write(f"Starting the {self.program} program!")
-            self.state = 'taking_quiz'
-            st.session_state.state = self.state
+            st.session_state.state = 'taking_quiz'
             self.take_quiz()
         else:
             st.error("Invalid operation. Program is not chosen yet or in incorrect state.")
@@ -77,8 +72,7 @@ class EnglishCourseFSA:
                     {"question": "Choose the correct word: The cat (sit/sits) on the mat.", "answer": "sits"}
                 ]
             }
-            
-            # Validasi program sebelum melanjutkan
+
             if self.program not in questions:
                 st.error("Invalid operation. Program is not chosen yet or in incorrect state.")
                 return
@@ -91,8 +85,7 @@ class EnglishCourseFSA:
                 if answer == q["answer"]:
                     self.score += 1
             if st.button('Submit Quiz'):
-                self.state = 'quiz_completed'
-                st.session_state.state = self.state
+                st.session_state.state = 'quiz_completed'
                 st.session_state.score = self.score
                 st.experimental_rerun()
         else:
@@ -110,8 +103,7 @@ class EnglishCourseFSA:
             st.write(f"You have been registered with the email {self.email}.")
             st.write(f"You have completed the {self.program} program with a score of {self.score}/3.")
             st.write(f"You have been awarded a {membership_level} membership card.")
-            self.state = 'completed'
-            st.session_state.state = self.state
+            st.session_state.state = 'completed'
         else:
             st.error("Invalid operation. Registration not yet completed or in incorrect state.")
 
@@ -120,19 +112,20 @@ registration = EnglishCourseFSA()
 
 # Function to run the registration process
 def run_registration():
-    if registration.state == 'start':
+    state = st.session_state.get('state', 'start')
+    if state == 'start':
         registration.start_registration()
-    elif registration.state == 'waiting_for_name':
+    elif state == 'waiting_for_name':
         registration.get_name()
-    elif registration.state == 'waiting_for_email':
+    elif state == 'waiting_for_email':
         registration.get_email()
-    elif registration.state == 'waiting_for_program':
+    elif state == 'waiting_for_program':
         registration.choose_program()
-    elif registration.state == 'program_chosen':
+    elif state == 'program_chosen':
         registration.start_program()
-    elif registration.state == 'taking_quiz':
+    elif state == 'taking_quiz':
         registration.take_quiz()
-    elif registration.state == 'quiz_completed':
+    elif state == 'quiz_completed':
         registration.complete_registration()
 
 run_registration()
