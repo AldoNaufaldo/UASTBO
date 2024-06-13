@@ -70,13 +70,13 @@ class EnglishCourseFSA:
             questions = {
                 'Grammar': [
                     {"question": "Choose the correct sentence: (a) She go to school. (b) She goes to school.", "answer": "b"},
-                    {"question": "Choose the correct word: He (is/are) a teacher.", "answer": "is"},
+                    {"question": "Choose the correct word: He (a) is. (B) are. a teacher.", "answer": "a"},
                     {"question": "Choose the correct sentence: (a) They is happy. (b) They are happy.", "answer": "b"}
                 ],
                 'Writing': [
                     {"question": "Choose the correct form: (a) I has a book. (b) I have a book.", "answer": "b"},
                     {"question": "Choose the correct sentence: (a) She were here. (b) She was here.", "answer": "b"},
-                    {"question": "Choose the correct word: The cat (sit/sits) on the mat.", "answer": "sits"}
+                    {"question": "Choose the correct word: The cat (a) sit. (b) sits. on the mat.", "answer": "b"}
                 ]
             }
 
