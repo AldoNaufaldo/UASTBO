@@ -77,6 +77,12 @@ class EnglishCourseFSA:
                     {"question": "Choose the correct word: The cat (sit/sits) on the mat.", "answer": "sits"}
                 ]
             }
+            
+            # Validasi program sebelum melanjutkan
+            if self.program not in questions:
+                st.error("Invalid operation. Program is not chosen yet or in incorrect state.")
+                return
+            
             selected_questions = questions[self.program]
             self.score = 0
             for i, q in enumerate(selected_questions):
