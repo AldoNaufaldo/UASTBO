@@ -12,7 +12,7 @@ class EnglishCourseFSA:
         if self.state == 'start':
             st.title("English Course Registration")
             st.session_state.state = 'waiting_for_name'
-            self.get_name()
+            st.experimental_rerun()
         else:
             st.error("Invalid operation. Already in progress or completed.")
     
@@ -21,8 +21,8 @@ class EnglishCourseFSA:
             self.name = st.text_input("Please enter your name:", key='name')
             if st.button('Next', key='name_next'):
                 if self.name:
-                    st.session_state.state = 'waiting_for_email'
                     st.session_state.name = self.name
+                    st.session_state.state = 'waiting_for_email'
                     st.experimental_rerun()
         else:
             st.error("Invalid operation. Name is already provided or in incorrect state.")
@@ -32,8 +32,8 @@ class EnglishCourseFSA:
             self.email = st.text_input("Please enter your email:", key='email')
             if st.button('Next', key='email_next'):
                 if self.email:
-                    st.session_state.state = 'waiting_for_program'
                     st.session_state.email = self.email
+                    st.session_state.state = 'waiting_for_program'
                     st.experimental_rerun()
         else:
             st.error("Invalid operation. Email is already provided or in incorrect state.")
@@ -44,8 +44,8 @@ class EnglishCourseFSA:
             self.program = st.radio("Select Program:", options=['Grammar', 'Writing'], key='program')
             if st.button('Next', key='program_next'):
                 if self.program:
-                    st.session_state.state = 'program_chosen'
                     st.session_state.program = self.program
+                    st.session_state.state = 'program_chosen'
                     st.experimental_rerun()
         else:
             st.error("Invalid operation. Program is already chosen or in incorrect state.")
@@ -54,7 +54,7 @@ class EnglishCourseFSA:
         if self.state == 'program_chosen':
             st.write(f"Starting the {self.program} program!")
             st.session_state.state = 'taking_quiz'
-            self.take_quiz()
+            st.experimental_rerun()
         else:
             st.error("Invalid operation. Program is not chosen yet or in incorrect state.")
     
@@ -85,8 +85,8 @@ class EnglishCourseFSA:
                 if answer == q["answer"]:
                     self.score += 1
             if st.button('Submit Quiz'):
-                st.session_state.state = 'quiz_completed'
                 st.session_state.score = self.score
+                st.session_state.state = 'quiz_completed'
                 st.experimental_rerun()
         else:
             st.error("Invalid operation. Quiz is already completed or in incorrect state.")
