@@ -2,16 +2,17 @@ import streamlit as st
 
 class EnglishCourseFSA:
     def __init__(self):
-        self.state = 'start'
-        self.name = None
-        self.email = None
-        self.program = None
-        self.score = 0
+        self.state = st.session_state.get('state', 'start')
+        self.name = st.session_state.get('name', None)
+        self.email = st.session_state.get('email', None)
+        self.program = st.session_state.get('program', None)
+        self.score = st.session_state.get('score', 0)
 
     def start_registration(self):
         if self.state == 'start':
             st.title("English Course Registration")
             self.state = 'waiting_for_name'
+            st.session_state.state = self.state
             self.get_name()
         else:
             st.error("Invalid operation. Already in progress or completed.")
@@ -21,6 +22,8 @@ class EnglishCourseFSA:
             self.name = st.text_input("Please enter your name:", key='name')
             if self.name:
                 self.state = 'waiting_for_email'
+                st.session_state.state = self.state
+                st.session_state.name = self.name
                 self.get_email()
         else:
             st.error("Invalid operation. Name is already provided or in incorrect state.")
@@ -30,6 +33,8 @@ class EnglishCourseFSA:
             self.email = st.text_input("Please enter your email:", key='email')
             if self.email:
                 self.state = 'waiting_for_program'
+                st.session_state.state = self.state
+                st.session_state.email = self.email
                 self.choose_program()
         else:
             st.error("Invalid operation. Email is already provided or in incorrect state.")
@@ -40,6 +45,8 @@ class EnglishCourseFSA:
             self.program = st.radio("Select Program:", options=['Grammar', 'Writing'], key='program')
             if self.program:
                 self.state = 'program_chosen'
+                st.session_state.state = self.state
+                st.session_state.program = self.program
                 self.start_program()
         else:
             st.error("Invalid operation. Program is already chosen or in incorrect state.")
@@ -48,6 +55,7 @@ class EnglishCourseFSA:
         if self.state == 'program_chosen':
             st.write(f"Starting the {self.program} program!")
             self.state = 'taking_quiz'
+            st.session_state.state = self.state
             self.take_quiz()
         else:
             st.error("Invalid operation. Program is not chosen yet or in incorrect state.")
@@ -74,6 +82,8 @@ class EnglishCourseFSA:
                 if answer == q["answer"]:
                     self.score += 1
             self.state = 'quiz_completed'
+            st.session_state.state = self.state
+            st.session_state.score = self.score
             self.complete_registration()
         else:
             st.error("Invalid operation. Quiz is already completed or in incorrect state.")
@@ -91,25 +101,12 @@ class EnglishCourseFSA:
             st.write(f"You have completed the {self.program} program with a score of {self.score}/3.")
             st.write(f"You have been awarded a {membership_level} membership card.")
             self.state = 'completed'
+            st.session_state.state = self.state
         else:
             st.error("Invalid operation. Registration not yet completed or in incorrect state.")
 
 # Create an instance of the EnglishCourseFSA
 registration = EnglishCourseFSA()
-
-# Run Streamlit app
-if 'state' not in st.session_state:
-    st.session_state.state = 'start'
-if 'name' in st.session_state:
-    registration.name = st.session_state.name
-if 'email' in st.session_state:
-    registration.email = st.session_state.email
-if 'program' in st.session_state:
-    registration.program = st.session_state.program
-if 'score' in st.session_state:
-    registration.score = st.session_state.score
-
-registration.state = st.session_state.state
 
 # Function to run the registration process
 def run_registration():
@@ -129,13 +126,3 @@ def run_registration():
         registration.complete_registration()
 
 run_registration()
-
-# Update session state to persist across interactions
-st.session_state.state = registration.state
-if registration.name:
-    st.session_state.name = registration.name
-if registration.email:
-    st.session_state.email = registration.email
-if registration.program:
-    st.session_state.program = registration.program
-st.session_state.score = registration.score
